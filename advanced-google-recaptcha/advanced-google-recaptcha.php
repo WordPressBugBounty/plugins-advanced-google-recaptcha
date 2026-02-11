@@ -9,7 +9,7 @@
   License: GNU General Public License v3.0
   Text Domain: advanced-google-recaptcha
   Requires at least: 4.9
-  Tested up to: 6.8
+  Tested up to: 6.9
   Requires PHP: 5.2
 
   Copyright 2023 - 2025  WebFactory Ltd  (email: support@webfactoryltd.com)
