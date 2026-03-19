@@ -389,6 +389,18 @@ class WPCaptcha_Functions extends WPCaptcha
         }
     }
 
+    static function check_woo_order_pay() 
+    {
+        $captcha_check = self::handle_captcha();
+        if ( $captcha_check === true ) {
+            return;
+        }
+
+        if ( function_exists('wc_add_notice') ) {
+            wc_add_notice($captcha_check->get_error_message(), 'error');
+        }
+    }
+
     static function check_edd_register_form()
     {
         $captcha_check = self::handle_captcha();
@@ -484,11 +496,17 @@ class WPCaptcha_Functions extends WPCaptcha
 
             if (class_exists('woocommerce')) {
                 $output .= '<script>
-                jQuery("form.woocommerce-checkout").on("submit", function(){
-                    setTimeout(function(){
+                    function wpcaptcha_captcha_refresh() {
                         grecaptcha.reset();
-                    },100);
-                });
+                    }
+
+                    jQuery(document.body).on("checkout_error", function(){
+                        setTimeout(wpcaptcha_captcha_refresh, 50);
+                    });
+
+                    jQuery(document.body).on("updated_checkout", function(){
+                        setTimeout(wpcaptcha_captcha_refresh, 50);
+                    });
                 </script>';
             }
         } else if ($options['captcha'] == 'recaptchav3') {
@@ -505,10 +523,12 @@ class WPCaptcha_Functions extends WPCaptcha
                 </script>';
             if (class_exists('woocommerce')) {
                 $output .= '<script>
-                    jQuery("form.woocommerce-checkout").on("submit", function(){
-                        setTimeout(function(){
-                            wpcaptcha_captcha();
-                        },100);
+                    jQuery(document.body).on("checkout_error", function(){
+                        setTimeout(wpcaptcha_captcha, 50);
+                    });
+
+                    jQuery(document.body).on("updated_checkout", function(){
+                        setTimeout(wpcaptcha_captcha, 50);
                     });
                 </script>';
             }
@@ -528,9 +548,9 @@ class WPCaptcha_Functions extends WPCaptcha
     {
         $options = WPCaptcha_Setup::get_options();
         if ($options['captcha'] == 'recaptchav2') {
-            wp_enqueue_script('wpcaptcha-recaptcha', 'https://www.google.com/recaptcha/api.js', array(), self::$version, true);
+            wp_enqueue_script('wpcaptcha-recaptcha', 'https://www.google.com/recaptcha/api.js', array('jquery'), self::$version, true);
         } else if ($options['captcha'] == 'recaptchav3') {
-            wp_enqueue_script('wpcaptcha-recaptcha', 'https://www.google.com/recaptcha/api.js?onload=wpcaptcha_captcha&render=' . esc_html($options['captcha_site_key']), array(), self::$version, true);
+            wp_enqueue_script('wpcaptcha-recaptcha', 'https://www.google.com/recaptcha/api.js?onload=wpcaptcha_captcha&render=' . esc_html($options['captcha_site_key']), array('jquery'), self::$version, true);
         }
     }
 
