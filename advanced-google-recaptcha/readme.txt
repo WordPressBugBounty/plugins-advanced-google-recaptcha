@@ -5,7 +5,7 @@ Tags: captcha, recaptcha, google recaptcha, comment recaptcha, login recaptcha
 Requires at least: 4.9
 Requires PHP: 5.6
 Tested up to: 6.9
-Stable tag: 1.32
+Stable tag: 1.33
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -75,6 +75,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 9. Plugin settings
 
 == Changelog ==
+= 1.33 - 26/03/2026 =
+* Wordfence compatibility fix
+
 = 1.32 - 19/03/2026 =
 * added captcha to WooCommerce payment endpoint
 * improved checkout error handling

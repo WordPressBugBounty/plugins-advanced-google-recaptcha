@@ -210,6 +210,10 @@ class WPCaptcha_Functions extends WPCaptcha
             return new WP_Error('wpcaptcha_fail_count', __("<strong>ERROR</strong>: We're sorry, but this IP has been blocked due to too many recent failed login attempts.<br /><br />Please try again later.", 'advanced-google-recaptcha'));
         }
 
+        if (is_wp_error($user)) {
+            return $user;
+        }
+
         if (!$username) {
             return $user;
         }
