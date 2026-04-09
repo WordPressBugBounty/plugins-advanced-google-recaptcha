@@ -1,7 +1,7 @@
 /**
  * WP Captcha
  * Admin Functions
- * (c) WebFactory Ltd, 2022 - 2025, www.webfactoryltd.com
+ * (c) WebFactory Ltd, 2022 - 2026, www.webfactoryltd.com
  */
 
 var WPCaptcha = {};
@@ -576,7 +576,7 @@ jQuery(document).ready(function ($) {
     $(this).parent().addClass("captcha-selected");
   });
 
-  $(".settings_page_wpcaptcha").on("change keyup", "#captcha,#captcha_site_key,#captcha_secret_key", function (e) { 
+  $(".settings_page_wpcaptcha").on("change keyup", "#captcha,#captcha_site_key,#captcha_secret_key", function (e) {
     $("#captcha_verified").val("0");
     if ($("#captcha").val() != "disabled" && $(this).val() != $(this).data("old")) {
       $(".captcha_verify_wrapper").show();
@@ -1048,7 +1048,7 @@ jQuery(document).ready(function ($) {
         e.preventDefault();
         $(".save-settings").blur();
         alert('You did not verify the selected captcha method so it will not be saved to prevent you getting locked out of your website.');
-    }    
+    }
   });
 
   function create_fails_chart() {
@@ -1499,11 +1499,12 @@ jQuery(document).ready(function ($) {
     });
   } // open_upsell
 
-  if (window.localStorage.getItem('wpcaptcha_upsell_shown') != 'true') {
-    open_upsell('welcome');
+  // show upsell popup every 4 months
+  if (window.localStorage.getItem('recaptcha_upsell_timestamp') === null ||
+      (new Date().getTime() / 1000 - window.localStorage.getItem('recaptcha_upsell_timestamp')) > (86400 * 120)) {
+    window.localStorage.setItem('recaptcha_upsell_timestamp', Math.round(new Date().getTime() / 1000));
 
-    window.localStorage.setItem('wpcaptcha_upsell_shown', 'true');
-    window.localStorage.setItem('wpcaptcha_upsell_shown_timestamp', new Date().getTime());
+    open_upsell('welcome');
   }
 
   if (window.location.hash == '#open-pro-dialog') {

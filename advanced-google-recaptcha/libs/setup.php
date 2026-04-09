@@ -3,7 +3,7 @@
 /**
  * WP Captcha
  * https://getwpcaptcha.com/
- * (c) WebFactory Ltd, 2022 - 2025, www.webfactoryltd.com
+ * (c) WebFactory Ltd, 2022 - 2026, www.webfactoryltd.com
  */
 
 class WPCaptcha_Setup extends WPCaptcha
@@ -667,7 +667,7 @@ class WPCaptcha_Setup extends WPCaptcha
             delete_option(WPCAPTCHA_META_KEY);
             delete_option(WPCAPTCHA_POINTERS_KEY);
             delete_option(WPCAPTCHA_NOTICES_KEY);
-            // phpcs:ignore db call warnings as we are using a custom table 
+            // phpcs:ignore db call warnings as we are using a custom table
             $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . "wpc_login_fails"); // phpcs:ignore
             $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . "wpc_accesslocks"); // phpcs:ignore
         }

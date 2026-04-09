@@ -3,7 +3,7 @@
 /**
  * WP Captcha
  * https://getwpcaptcha.com/
- * (c) WebFactory Ltd, 2022 - 2025, www.webfactoryltd.com
+ * (c) WebFactory Ltd, 2022 - 2026, www.webfactoryltd.com
  */
 
 class WPCaptcha_Functions extends WPCaptcha
@@ -357,7 +357,7 @@ class WPCaptcha_Functions extends WPCaptcha
         if( !isset( $_POST['pass1'] ) &&  !isset( $_POST['user_login'] ) ){ //phpcs:ignore
             return $errors;
         }
-        
+
         $captcha_check = self::handle_captcha();
         if ($captcha_check !== true) {
             $errors->add('captcha', $captcha_check->get_error_message());
@@ -393,7 +393,7 @@ class WPCaptcha_Functions extends WPCaptcha
         }
     }
 
-    static function check_woo_order_pay() 
+    static function check_woo_order_pay()
     {
         $captcha_check = self::handle_captcha();
         if ( $captcha_check === true ) {
@@ -491,10 +491,10 @@ class WPCaptcha_Functions extends WPCaptcha
     static function captcha_fields($output = false)
     {
         $options = WPCaptcha_Setup::get_options();
-        
+
         if(false === $output){
             $output = '';
-        } 
+        }
         if ($options['captcha'] == 'recaptchav2') {
             $output .=  '<div class="g-recaptcha" style="transform: scale(0.9); -webkit-transform: scale(0.9); transform-origin: 0 0; -webkit-transform-origin: 0 0;" data-sitekey="' . esc_html($options['captcha_site_key']) . '"></div>';
 
@@ -1320,7 +1320,7 @@ class WPCaptcha_Functions extends WPCaptcha
     static function math_captcha_generate($captcha_id = false)
     {
         ob_start();
-        
+
         $a = wp_rand(0, (int) 10);
         $b = wp_rand(0, (int) 10);
         if(isset($_GET['color'])){ // phpcs:ignore

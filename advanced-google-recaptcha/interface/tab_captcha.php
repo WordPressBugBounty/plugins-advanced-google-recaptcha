@@ -2,7 +2,7 @@
 /**
  * WP Captcha
  * https://getwpcaptcha.com/
- * (c) WebFactory Ltd, 2022 - 2025, www.webfactoryltd.com
+ * (c) WebFactory Ltd, 2022 - 2026, www.webfactoryltd.com
  */
 
 class WPCaptcha_Tab_Captcha extends WPCaptcha
@@ -81,7 +81,7 @@ class WPCaptcha_Tab_Captcha extends WPCaptcha
             <option value="1.0" class="pro-option">1.0</option>
         </select>';
         echo '<br /><span>reCAPTCHA v3 returns a score (1.0 is very likely a good interaction, 0.0 is very likely a bot)</span>';
-        
+
         echo '</td></tr>';
 
         echo '<tr class="captcha_verify_wrapper" style="display:none;" valign="top">
