@@ -516,28 +516,85 @@ class WPCaptcha_Functions extends WPCaptcha
         } else if ($options['captcha'] == 'recaptchav3') {
             $output .= '<input type="hidden" name="g-recaptcha-response" class="agr-recaptcha-response" value="" />';
             $output .= '<script>
-                function wpcaptcha_captcha(){
-                    grecaptcha.execute("' . esc_html($options['captcha_site_key']) . '", {action: "submit"}).then(function(token) {
-                        var captchas = document.querySelectorAll(".agr-recaptcha-response");
-                        captchas.forEach(function(captcha) {
-                            captcha.value = token;
+                (function() {
+                    var siteKey = "' . esc_js($options['captcha_site_key']) . '";
+                    var refreshTimer = null;
+
+                    function wpcaptchaSetToken(token) {
+                        document.querySelectorAll(".agr-recaptcha-response").forEach(function(field) {
+                            field.value = token;
+                            field.setAttribute("data-token-time", Date.now());
                         });
-                    });
-                }
+                    }
+
+                    function wpcaptchaRefreshToken(callback) {
+                        if (typeof grecaptcha === "undefined") {
+                            if (callback) callback(false);
+                            return;
+                        }
+
+                        grecaptcha.ready(function() {
+                            grecaptcha.execute(siteKey, { action: "submit" }).then(function(token) {
+                                wpcaptchaSetToken(token);
+                                if (callback) callback(true);
+                            });
+                        });
+                    }
+
+                    function wpcaptchaStartAutoRefresh() {
+                        clearInterval(refreshTimer);
+
+                        wpcaptchaRefreshToken();
+
+                        refreshTimer = setInterval(function() {
+                            wpcaptchaRefreshToken();
+                        }, 90000);
+                    }
+
+                    document.addEventListener("submit", function(e) {
+                        var form = e.target;
+                        var field = form.querySelector(".agr-recaptcha-response");
+
+                        if (!field) return;
+
+                        var tokenTime = parseInt(field.getAttribute("data-token-time") || "0", 10);
+                        var age = Date.now() - tokenTime;
+
+                        if (field.value && age < 90000) {
+                            return;
+                        }
+
+                        e.preventDefault();
+
+                        wpcaptchaRefreshToken(function(success) {
+                            if (success) {
+                                form.submit();
+                            }
+                        });
+                    }, true);
+
+                    window.wpcaptchaRefreshToken = wpcaptchaRefreshToken;
+
+                    if (document.readyState === "loading") {
+                        document.addEventListener("DOMContentLoaded", wpcaptchaStartAutoRefresh);
+                    } else {
+                        wpcaptchaStartAutoRefresh();
+                    }
+                })();
                 </script>';
             if (class_exists('woocommerce')) {
                 $output .= '<script>
                     jQuery(document.body).on("checkout_error", function(){
-                        setTimeout(wpcaptcha_captcha, 50);
+                        setTimeout(wpcaptchaRefreshToken, 50);
                     });
 
                     jQuery(document.body).on("updated_checkout", function(){
-                        setTimeout(wpcaptcha_captcha, 50);
+                        setTimeout(wpcaptchaRefreshToken, 50);
                     });
                 </script>';
             }
         } else if ($options['captcha'] == 'builtin') {
-            $output .= '<p><label for="wpcaptcha_captcha">Are you human? Please solve: ';
+            $output .= '<p><label for="wpcaptcha_captcha">' . !empty($options['captcha_challenge_text'])?$options['captcha_challenge_text']:'Are you human? Please solve: ';
             $captcha_id = wp_rand(1000, 9999);
             $captcha = self::math_captcha_generate($captcha_id);
             $output .= '<img class="wpcaptcha-captcha-img" style="vertical-align: text-top;" src="' . $captcha['img'] . '" alt="Captcha" />';
@@ -554,7 +611,7 @@ class WPCaptcha_Functions extends WPCaptcha
         if ($options['captcha'] == 'recaptchav2') {
             wp_enqueue_script('wpcaptcha-recaptcha', 'https://www.google.com/recaptcha/api.js', array('jquery'), self::$version, true);
         } else if ($options['captcha'] == 'recaptchav3') {
-            wp_enqueue_script('wpcaptcha-recaptcha', 'https://www.google.com/recaptcha/api.js?onload=wpcaptcha_captcha&render=' . esc_html($options['captcha_site_key']), array('jquery'), self::$version, true);
+            wp_enqueue_script('wpcaptcha-recaptcha', 'https://www.google.com/recaptcha/api.js?onload=wpcaptchaRefreshToken&render=' . esc_html($options['captcha_site_key']), array('jquery'), self::$version, true);
         }
     }
 

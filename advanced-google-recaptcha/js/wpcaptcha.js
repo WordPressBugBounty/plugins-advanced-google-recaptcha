@@ -927,6 +927,12 @@ jQuery(document).ready(function ($) {
     $(".captcha_score_wrapper").hide();
   }
 
+  if ( $("#captcha").val() == "builtin") {
+    $(".captcha_challenge_text").show();
+  } else {
+    $(".captcha_challenge_text").hide();
+  }
+
   $("#captcha").on("change", function () {
     if ($("#captcha").val() != "disabled" && $("#captcha").val() != "builtin" && $("#captcha").val() != "icons") {
       $(".captcha_keys_wrapper").show();
@@ -938,6 +944,12 @@ jQuery(document).ready(function ($) {
     } else {
       $(".captcha_keys_wrapper").hide();
       $(".captcha_score_wrapper").hide();
+    }
+
+    if ( $("#captcha").val() == "builtin") {
+      $(".captcha_challenge_text").show();
+    } else {
+      $(".captcha_challenge_text").hide();
     }
   });
 
