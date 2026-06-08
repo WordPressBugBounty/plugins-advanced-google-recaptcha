@@ -5,7 +5,7 @@ Tags: captcha, recaptcha, google recaptcha, comment recaptcha, login recaptcha
 Requires at least: 4.9
 Requires PHP: 5.6
 Tested up to: 7.0
-Stable tag: 1.35
+Stable tag: 5.39
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -75,6 +75,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 9. Plugin settings
 
 == Changelog ==
+= 5.39 - 08/06/2026 =
+* Updated the free version number to keep the free and PRO releases aligned and avoid confusion around public security advisories. The reported issue (CVE-2026-5411) affected the PRO version only (not the free one) and was already patched, but because both versions share the same plugin slug, some users and automated tools could and did misinterpret the version numbers. Aligning the free version with the PRO version makes it clearer that the installed plugin is current and helps prevent unnecessary concerns
+
 = 1.35 - 05/05/2026 =
 * Added option to customize "Are you human? Please solve:" text
 * Fixed reCaptcha v3 token expiration
