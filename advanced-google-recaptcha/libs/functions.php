@@ -632,7 +632,7 @@ class WPCaptcha_Functions extends WPCaptcha
         if ($options['captcha'] == 'recaptchav2') {
             $output .= "<script src='https://www.google.com/recaptcha/api.js?ver=" . esc_attr(self::$version) . "' id='wpcaptcha-recaptcha-js'></script>"; // phpcs:ignore
         } else if ($options['captcha'] == 'recaptchav3') {
-            $output .= "<script src='https://www.google.com/recaptcha/api.js?onload=wpcaptcha_captcha&render=" . esc_html($options['captcha_site_key']) . "&ver=" . esc_attr(self::$version) . "' id='wpcaptcha-recaptcha-js'></script>"; // phpcs:ignore
+            $output .= "<script src='https://www.google.com/recaptcha/api.js?render=" . esc_html($options['captcha_site_key']) . "&ver=" . esc_attr(self::$version) . "' id='wpcaptcha-recaptcha-js'></script>"; // phpcs:ignore
         }
 
         return $output;
