@@ -188,6 +188,12 @@ class WPCaptcha_Functions extends WPCaptcha
         // phpcs:ignore db call warning as we are using a custom table
         $stillLocked = $wpdb->get_var($wpdb->prepare("SELECT user_id FROM " . $wpdb->wpcatcha_accesslocks . " WHERE release_date > %s AND accesslock_IP = %s AND unlocked = 0", array(current_time('mysql'), $ip))); // phpcs:ignore
 
+        if($stillLocked > 0){
+            return true;
+        } else {
+            return false;
+        }
+        
         return $stillLocked;
     }
 
@@ -203,16 +209,14 @@ class WPCaptcha_Functions extends WPCaptcha
 
     static function wp_authenticate_lock($user, $username, $password)
     {
-        if (is_a($user, 'WP_User')) {
-            return $user;
-        }
-
         $options = WPCaptcha_Setup::get_options();
 
         if (self::isLockedDown()) {
             self::accesslock_screen($options['block_message']);
             return new WP_Error('lockdown_fail_count', __("<strong>ERROR</strong>: We're sorry, but this IP has been blocked due to too many recent failed login attempts.<br /><br />Please try again later.", 'login-lockdown'));
         }
+
+        return $user;
     }
 
     static function wp_authenticate_user($user, $password)
